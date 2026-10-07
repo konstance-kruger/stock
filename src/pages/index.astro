@@ -16,11 +16,14 @@ const formatCurrency = (value) =>
     currency: "EUR"
   }).format(value);
 
-const formatDate = (value) =>
-  new Intl.DateTimeFormat("fr-FR", {
+const formatDate = (value) => {
+  const utcDate = value.replace(" ", "T") + "Z";
+
+  return new Intl.DateTimeFormat("fr-FR", {
     dateStyle: "short",
     timeStyle: "short"
-  }).format(new Date(value + "Z"));
+  }).format(new Date(utcDate));
+};
 ---
 
 <!doctype html>

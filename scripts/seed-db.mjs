@@ -1,6 +1,10 @@
 import { Database } from "bun:sqlite";
 
-const db = new Database(process.env.BDD_SQLITE_PATH);
+const dbPath = process.env.BDD_SQLITE_PATH || "./data/stock.sqlite";
+
+const db = new Database(dbPath, {
+  create: true
+});
 
 db.run("DELETE FROM products");
 
@@ -26,11 +30,14 @@ const products = [
 ];
 
 const transaction = db.transaction(() => {
-  for (const product of products) insert.run(...product);
+  for (const product of products) {
+    insert.run(...product);
+  }
 });
 
 transaction();
+
 insert.finalize();
 db.close();
 
-console.log(`${products.length} produits insérés.`);
+console.log(`${products.length} produits insérés dans ${dbPath}.`);

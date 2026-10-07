@@ -1,9 +1,13 @@
 import { mkdir } from "node:fs/promises";
 import { Database } from "bun:sqlite";
 
+const dbPath = process.env.BDD_SQLITE_PATH || "./data/stock.sqlite";
+
 await mkdir("./data", { recursive: true });
 
-const db = new Database("./data/stock.sqlite");
+const db = new Database(dbPath, {
+  create: true
+});
 
 db.run(`
   CREATE TABLE IF NOT EXISTS products (
@@ -30,4 +34,4 @@ db.run(`
 
 db.close();
 
-console.log("Base SQLite initialisée : data/stock.sqlite");
+console.log(`Base SQLite initialisée : ${dbPath}`);
